@@ -1,15 +1,13 @@
-
 #  Lenet_TangMega138K
 
 基于 **Hummingbird E203** 与 **Tang Mega 138K FPGA** 的 LeNet 加速系统
-
 ---
 
 ## 📁 项目结构（Project Structure）
 
 ```plaintext
 Lenet_TangMega138K
-├── zwh_hkl_lbr/            # 公共库文件
+├── zwh_hkl_lbr/            
 ├── rtl/                    # RTL 主要代码
 │   ├── e203/               # 蜂鸟 E203 SoC 搭建
 │   ├── accel/              # LeNet 加速器模块
@@ -48,13 +46,10 @@ RTL 逻辑模块，包含系统最核心的硬件设计：
 * 后续可以扩展 co-sim（软硬协同仿真）
 ---
 ### 🔹 **constraints/**（待建设）
-
 存放 FPGA 引脚约束文件（如 `.xdc`、`.pcf`）。
 ---
 ### 🔹 **build/**（待建设）
-
 生成文件目录，包括：
-
 * bitstream (`.bit`)
 * 编译日志
 * 中间文件
@@ -62,10 +57,9 @@ RTL 逻辑模块，包含系统最核心的硬件设计：
 ## 🚀 开发目标（Development Goals）
 
 * 在 Tang Mega 138K FPGA 上跑通 **端到端 LeNet 推理**
-* 实现 **E203 + 自定义 CNN 加速器** 的 SoC 架构
+* 实现 **E203 + 自定义加速器** 的 SoC 架构
 * 支持 **软件/硬件协同调试**
 * 最终可运行 firmware → 驱动加速器 → 输出分类结果
 ---
 
-告诉我你想强化哪一部分即可！
 
