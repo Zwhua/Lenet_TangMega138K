@@ -1,2 +1,10 @@
 Lenet_TangMega138K
 zwh_hkl_lbr
+rtl:主要代码
+    e203：用于蜂鸟e203搭建
+    accel：加速器
+    soc：顶层封装
+firmware：固件控制，c语言文件
+simulate：仿真，包含python与c++的lenet仿真
+constraints（待建设）：约束引脚
+build（待建设）：生成的结果文件
