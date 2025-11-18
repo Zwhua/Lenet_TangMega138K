@@ -1,5 +1,7 @@
 # HummingBird RISC-V Software Development Kit
 
+此处sdk文件用于编写对加速器的软件控制，状态检测等，目前编译成功的文件放在hbird-sdk\application\baremetal\lenet_accel，运行方法可见开源的“快速上手在线文档”（https://doc.nucleisys.com/hbirdv2/）可直接从4.3开始跟着做，注意似乎一定需要在cmd里面操作他的编译过程，每次新开一个cmd窗口都需要重新编译（指从setup.bat开始），另需注意文档中工具链出现更新，gcc工具链名称更新为Nuclei RISC-V Embedded Toolchain(Baremetal/RTOS + Newlibc)，包括内含的文件名称也出现更新，但sdk本体似乎未跟上，我采用嵌套一层外壳的方法（可详见nuclei-tool）
+
 [![Build Documentation](https://github.com/riscv-mcu/hbird-sdk/workflows/Build%20Documentation/badge.svg)](https://github.com/riscv-mcu/hbird-sdk/actions?query=workflow%3A%22Build+Documentation%22)
 [![Build SDK](https://github.com/riscv-mcu/hbird-sdk/workflows/Build%20SDK/badge.svg)](https://github.com/riscv-mcu/hbird-sdk/actions?query=workflow%3A%22Build+SDK%22)
 
