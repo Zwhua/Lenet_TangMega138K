@@ -1,9 +1,14 @@
 Hummingbirdv2 E203 Core and SoC 
 ===============================
+//////////////////////////////////////////////////////////////////////////////////
 
 rtl/e203/perips/lenet_accel_icb.v ：寄存器读写，向计算核发 start 信号、接收 done 信号
 
 rtl\e203\subsys\e203_subsys_perips.v： 修改了Example-AXI模块换成Lenet ，信号模块约在七百多行，未修改，保留 ICB 总线到 O14 的映射；后面修改了模块实例，改为了lenet_accel_icb u_lenet_accel_icb，约一千八百行
+
+
+//////////////////////////////////////////////////////////////////////////////////
+
 
 
 [![Deploy Documentation](https://github.com/riscv-mcu/e203_hbirdv2/workflows/Deploy%20Documentation/badge.svg)](https://doc.nucleisys.com/hbirdv2)
