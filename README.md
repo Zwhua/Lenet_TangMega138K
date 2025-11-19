@@ -6,7 +6,7 @@
 
 另需注意文档中工具链出现更新，gcc工具链名称更新为Nuclei RISC-V Embedded Toolchain(Baremetal/RTOS + Newlibc)，
 
-包括内含的文件名称也出现更新，但sdk本体似乎未跟上，我采用嵌套一层外壳的方法（可详见nuclei-tool）---nuclei-tool过大无法上传git，可见下面图片示例，每用到一个rescv-nuclei-elf-xxxx,(缺失时编译会报错)，都需要新建一个.bat文件来引用它
+包括内含的文件名称也出现更新，但sdk本体似乎未跟上，我采用嵌套一层外壳的方法（可详见nuclei-tool）---nuclei-tool过大无法上传git，可见下面图片示例，每用到一个rescv-nuclei-elf-xxxx,(缺失时编译会报错)，都需要新建一个.bat文件来引用它，因为下载下来的工具链名称为rescv64-unknown-xxxx
 
 <img width="341" height="519" alt="image" src="https://github.com/user-attachments/assets/2902b454-f52d-4f78-8924-ecf61bd6f62c" />
 
