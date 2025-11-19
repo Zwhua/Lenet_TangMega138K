@@ -719,7 +719,8 @@ module e203_subsys_perips(
     .o13_icb_rsp_excl_ok(1'b0  ),
     .o13_icb_rsp_rdata  (gpioB_apb_icb_rsp_rdata),
 
-   //  * Example AXI    
+   //  * Example AXI     LeNet-ACCEL
+
     .o14_icb_enable     (1'b1),
 
     .o14_icb_cmd_valid  (expl_axi_icb_cmd_valid),
@@ -1836,7 +1837,47 @@ apb_adv_timer #(
   wire expl_axi_bvalid;
   wire expl_axi_bready;
   wire [1:0] expl_axi_bresp;
-   
+
+
+// LeNet Accelerator interface wires
+wire        lenet_accel_start;
+wire        lenet_accel_done;
+wire [31:0] lenet_img_base;
+wire [31:0] lenet_wgt_base;
+wire [31:0] lenet_out_base;
+
+// 临时：先假设硬件计算瞬间完成，用常量 1 模拟 done
+// 以后接上真正的加速器核的时候，再把这个 assign 删掉，改成从核里拉信号
+assign lenet_accel_done = 1'b1;
+
+lenet_accel_icb u_lenet_accel_icb (
+    .clk              (clk),
+    .rst_n            (bus_rst_n),
+
+    .i_icb_cmd_valid  (expl_axi_icb_cmd_valid),
+    .i_icb_cmd_ready  (expl_axi_icb_cmd_ready),
+    .i_icb_cmd_addr   (expl_axi_icb_cmd_addr ),
+    .i_icb_cmd_read   (expl_axi_icb_cmd_read ),
+    .i_icb_cmd_wdata  (expl_axi_icb_cmd_wdata),
+    .i_icb_cmd_wmask  (expl_axi_icb_cmd_wmask),
+
+    .i_icb_rsp_valid  (expl_axi_icb_rsp_valid),
+    .i_icb_rsp_ready  (expl_axi_icb_rsp_ready),
+    .i_icb_rsp_rdata  (expl_axi_icb_rsp_rdata),
+    .i_icb_rsp_err    (expl_axi_icb_rsp_err),
+
+    .accel_start      (lenet_accel_start),
+    .accel_done       (lenet_accel_done),
+
+    .img_base_addr    (lenet_img_base),
+    .wgt_base_addr    (lenet_wgt_base),
+    .out_base_addr    (lenet_out_base)
+);
+
+
+
+/*  原 Example-AXI 桥接模块，现不用
+
 sirv_gnrl_icb2axi # (
   .AXI_FIFO_DP (2), // We just add ping-pong buffer here to avoid any potential timing loops
                     //   User can change it to 0 if dont care
@@ -1898,6 +1939,10 @@ sirv_gnrl_icb2axi # (
     .clk           (clk  ),
     .rst_n         (bus_rst_n) 
   );
+
+*/
+
+
 
 sirv_expl_axi_slv # (
   .AW   (32),
