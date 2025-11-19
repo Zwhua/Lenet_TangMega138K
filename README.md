@@ -6,6 +6,11 @@ rtl/e203/perips/lenet_accel_icb.v ：寄存器读写，向计算核发 start 信
 
 rtl\e203\subsys\e203_subsys_perips.v： 修改了Example-AXI模块换成Lenet ，信号模块约在七百多行，未修改，保留 ICB 总线到 O14 的映射；后面修改了模块实例，改为了lenet_accel_icb u_lenet_accel_icb，约一千八百行
 
+（未验证）
+
+SoC 结构变成：CPU 访问 0x1004_1000 这段地址 →ICB fabric 把请求送到 O14 → O14 的 ICB 信号接到 lenet_accel_icb →lenet_accel_icb 里：把写寄存器的命令记在内部寄存器里（IMG/WGT/OUT/CTRL）当 CTRL[0] 被写 1 → 发出一个 accel_start 脉冲、把 busy=1看到 accel_done（现在我们先 Tie = 1）→ 把 done=1, busy=0
+
+在sdk的 lenet_accel.h 访问同一地址，写寄存器 → 启动读 STATUS → 看到 DONE 位置 1
 
 //////////////////////////////////////////////////////////////////////////////////
 
