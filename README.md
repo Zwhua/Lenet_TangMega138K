@@ -16,6 +16,8 @@
 
 "D:\nuclei-tools\gcc\bin\riscv64-unknown-elf-gcc.exe" %*
 
+//////////////////////////////////////////////////////////////////////下面为官方readme////////////////////////////////////////////////////////////////////////////
+
 [![Build Documentation](https://github.com/riscv-mcu/hbird-sdk/workflows/Build%20Documentation/badge.svg)](https://github.com/riscv-mcu/hbird-sdk/actions?query=workflow%3A%22Build+Documentation%22)
 [![Build SDK](https://github.com/riscv-mcu/hbird-sdk/workflows/Build%20SDK/badge.svg)](https://github.com/riscv-mcu/hbird-sdk/actions?query=workflow%3A%22Build+SDK%22)
 
