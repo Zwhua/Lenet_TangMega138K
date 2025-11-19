@@ -6,8 +6,15 @@
 
 另需注意文档中工具链出现更新，gcc工具链名称更新为Nuclei RISC-V Embedded Toolchain(Baremetal/RTOS + Newlibc)，
 
-包括内含的文件名称也出现更新，但sdk本体似乎未跟上，我采用嵌套一层外壳的方法（可详见nuclei-tool）
+包括内含的文件名称也出现更新，但sdk本体似乎未跟上，我采用嵌套一层外壳的方法（可详见nuclei-tool）---nuclei-tool过大无法上传git，可见下面图片示例，每用到一个rescv-nuclei-elf-xxxx,(缺失时编译会报错)，都需要新建一个.bat文件来引用它
 
+<img width="341" height="519" alt="image" src="https://github.com/user-attachments/assets/2902b454-f52d-4f78-8924-ecf61bd6f62c" />
+
+.bat代码示例为
+
+@echo off
+
+"D:\nuclei-tools\gcc\bin\riscv64-unknown-elf-gcc.exe" %*
 
 [![Build Documentation](https://github.com/riscv-mcu/hbird-sdk/workflows/Build%20Documentation/badge.svg)](https://github.com/riscv-mcu/hbird-sdk/actions?query=workflow%3A%22Build+Documentation%22)
 [![Build SDK](https://github.com/riscv-mcu/hbird-sdk/workflows/Build%20SDK/badge.svg)](https://github.com/riscv-mcu/hbird-sdk/actions?query=workflow%3A%22Build+SDK%22)
