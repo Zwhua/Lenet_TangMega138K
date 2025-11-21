@@ -1,5 +1,4 @@
-# PMOD LED
-Test condition: 2x PMOD-LEDx8 module installed on the dock
+# 
+用PMOD-LED改的高云代码，整合了E203-SOC
 
-
-Phenomenon: 16 LEDs lighting up one by one from one side to the other side, then going out together.
+框架性，验证控制链成立，高云ide上编译已通过，未上板
