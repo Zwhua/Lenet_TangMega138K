@@ -1,0 +1,8 @@
+*.vcd
+*.out
+*.bin
+*.elf
+*.map
+gowin_prj/impl/
+*.log
+tools/makehex64/build/  
