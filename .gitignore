@@ -6,3 +6,4 @@
 gowin_prj/impl/
 *.log
 tools/makehex64/build/  
+sim/waveout_001.lxt
