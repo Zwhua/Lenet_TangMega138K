@@ -1,0 +1,126 @@
+{
+  "model": "LeNet",
+  "dtype": "float32",
+  "quantize": "none",
+  "layers": [
+    {
+      "name": "conv1.weight",
+      "safe_name": "conv1_weight",
+      "shape": [
+        6,
+        1,
+        5,
+        5
+      ],
+      "files": {
+        "fp32_npy": "artifacts/lenet_weights/float32/conv1_weight.npy",
+        "fp32_bin": "artifacts/lenet_weights/float32/conv1_weight.bin"
+      }
+    },
+    {
+      "name": "conv1.bias",
+      "safe_name": "conv1_bias",
+      "shape": [
+        6
+      ],
+      "files": {
+        "fp32_npy": "artifacts/lenet_weights/float32/conv1_bias.npy",
+        "fp32_bin": "artifacts/lenet_weights/float32/conv1_bias.bin"
+      }
+    },
+    {
+      "name": "conv2.weight",
+      "safe_name": "conv2_weight",
+      "shape": [
+        16,
+        6,
+        5,
+        5
+      ],
+      "files": {
+        "fp32_npy": "artifacts/lenet_weights/float32/conv2_weight.npy",
+        "fp32_bin": "artifacts/lenet_weights/float32/conv2_weight.bin"
+      }
+    },
+    {
+      "name": "conv2.bias",
+      "safe_name": "conv2_bias",
+      "shape": [
+        16
+      ],
+      "files": {
+        "fp32_npy": "artifacts/lenet_weights/float32/conv2_bias.npy",
+        "fp32_bin": "artifacts/lenet_weights/float32/conv2_bias.bin"
+      }
+    },
+    {
+      "name": "fc1.weight",
+      "safe_name": "fc1_weight",
+      "shape": [
+        120,
+        400
+      ],
+      "files": {
+        "fp32_npy": "artifacts/lenet_weights/float32/fc1_weight.npy",
+        "fp32_bin": "artifacts/lenet_weights/float32/fc1_weight.bin"
+      }
+    },
+    {
+      "name": "fc1.bias",
+      "safe_name": "fc1_bias",
+      "shape": [
+        120
+      ],
+      "files": {
+        "fp32_npy": "artifacts/lenet_weights/float32/fc1_bias.npy",
+        "fp32_bin": "artifacts/lenet_weights/float32/fc1_bias.bin"
+      }
+    },
+    {
+      "name": "fc2.weight",
+      "safe_name": "fc2_weight",
+      "shape": [
+        84,
+        120
+      ],
+      "files": {
+        "fp32_npy": "artifacts/lenet_weights/float32/fc2_weight.npy",
+        "fp32_bin": "artifacts/lenet_weights/float32/fc2_weight.bin"
+      }
+    },
+    {
+      "name": "fc2.bias",
+      "safe_name": "fc2_bias",
+      "shape": [
+        84
+      ],
+      "files": {
+        "fp32_npy": "artifacts/lenet_weights/float32/fc2_bias.npy",
+        "fp32_bin": "artifacts/lenet_weights/float32/fc2_bias.bin"
+      }
+    },
+    {
+      "name": "fc3.weight",
+      "safe_name": "fc3_weight",
+      "shape": [
+        10,
+        84
+      ],
+      "files": {
+        "fp32_npy": "artifacts/lenet_weights/float32/fc3_weight.npy",
+        "fp32_bin": "artifacts/lenet_weights/float32/fc3_weight.bin"
+      }
+    },
+    {
+      "name": "fc3.bias",
+      "safe_name": "fc3_bias",
+      "shape": [
+        10
+      ],
+      "files": {
+        "fp32_npy": "artifacts/lenet_weights/float32/fc3_bias.npy",
+        "fp32_bin": "artifacts/lenet_weights/float32/fc3_bias.bin"
+      }
+    }
+  ]
+}

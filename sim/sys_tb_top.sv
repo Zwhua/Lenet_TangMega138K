@@ -1,4 +1,4 @@
-
+`define SIMULATION
 `timescale 1ns/1ns
 `define USING_IVERILOG
 
@@ -26,7 +26,7 @@ module sys_tb_top();
 `endif
 
   initial begin
-    #200ms;
+    #50ms;
     $finish;
   end
 
@@ -47,7 +47,7 @@ module sys_tb_top();
 
   always
   begin 
-     #33 lfextclk <= ~lfextclk;
+     #15258.789 lfextclk <= ~lfextclk;  // 32.768 kHz RTC clock
   end
 
 //--------------UART data transfer--------------//  

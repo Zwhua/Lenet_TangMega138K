@@ -1,5 +1,8 @@
 #!/bin/bash
 iverilog -g2005-sv -o waveout -I ../rtl/core ./sys_tb_top.sv ../sim_lib/gw2a/prim_sim.v    \
+../rtl/core/PLL_138K/gowin_pll.v   \
+../rtl/core/PLL_138K/gowin_pll_mod.v   \
+../rtl/core/PLL_138K/pll_init.v   \
 ../rtl/ip/LENET/conv1_accel_icb.v     \
 ../rtl/ip/LENET/conv1_accel.v    \
 ../rtl/core/e203_defines.v    \

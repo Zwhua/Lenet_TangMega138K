@@ -6,6 +6,16 @@
 #include "platform.h"
 #include "encoding.h"
 
+/*
+ * If your platform has a fixed/known CPU frequency, you can define
+ * FIXED_CPU_FREQ_HZ (either here or via compiler -D) to avoid the
+ * runtime measurement which may deadlock if the memory scanned by
+ * measure_cpu_freq() isn't changed by hardware/software.
+ */
+#ifndef FIXED_CPU_FREQ_HZ
+#define FIXED_CPU_FREQ_HZ 19230769u 
+#endif
+
 //typedef unsigned int  size_t;
 extern int main(int argc, char** argv);
 extern void trap_entry();
@@ -43,7 +53,7 @@ uint64_t get_timer_value()
 
 unsigned long get_timer_freq()
 {
-  return 32768;
+  return 32552;
 }
 
 uint64_t get_instret_value()
@@ -92,7 +102,7 @@ static unsigned long __attribute__((noinline)) measure_cpu_freq(size_t n)
   } while (delta_mtime < n);
 
   unsigned long delta_mcycle = read_csr(mcycle) - start_mcycle;
-
+  //mtime_freq=32552;
   return (delta_mcycle / delta_mtime) * mtime_freq
          + ((delta_mcycle % delta_mtime) * mtime_freq) / delta_mtime;
 }
@@ -101,7 +111,11 @@ unsigned long get_cpu_freq()
 {
   uint32_t cpu_freq;
 
-  // warm up
+  // if (FIXED_CPU_FREQ_HZ != 0) {
+  //   return (unsigned long)FIXED_CPU_FREQ_HZ;
+  // }
+
+  /* Fallback to runtime measurement (original behavior). */
   measure_cpu_freq(1);
   // measure for real
   cpu_freq = measure_cpu_freq(100);
@@ -116,6 +130,7 @@ static void uart_init(size_t baud_rate)
   UART0_REG(UART_REG_DIV) = get_cpu_freq() / baud_rate - 1;
   UART0_REG(UART_REG_TXCTRL) |= UART_TXEN;
   UART0_REG(UART_REG_RXCTRL) |= UART_RXEN;
+  //printf("UART %u DIV\n", (unsigned int)UART0_REG(UART_REG_DIV));
 }
 
 

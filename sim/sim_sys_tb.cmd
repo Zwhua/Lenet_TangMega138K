@@ -1,4 +1,6 @@
 iverilog -g2005-sv -o wave.out -I ../rtl/core ./sys_tb_top.sv ../sim_lib/gw2a/prim_sim.v ^
+../rtl/core/PLL_138K/gowin_pll.v ^
+../rtl/core/PLL_138K/gowin_pll_mod.v ^
 ../rtl/core/e203_defines.v ^
 ../rtl/core/e203_biu.v ^
 ../rtl/core/e203_clk_ctrl.v ^

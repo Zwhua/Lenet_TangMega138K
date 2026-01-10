@@ -1,0 +1,39 @@
+// Tang Mega 138K (GW5AST-138) constraints for top: e203_soc_demo
+// Only constrains the pins that have clear mappings on the board pinout file.
+// Unmapped ports (tck/tms/tdi/tdo, qspi_*, dbgmode*, bootrom_n, aon_pmu_*) are intentionally not LOC-assigned here.
+// If you need those signals on real pins, pick spare IOs from the board pinout and add IO_LOC/IO_PORT for them.
+
+//====== Clock / Reset ======
+IO_LOC  "clk_in"   V22;
+IO_PORT "clk_in"   IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
+
+IO_LOC  "erstn"    AA13;
+IO_PORT "erstn"    IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
+
+//====== Bring-up LEDs (map gpio_out[0..7] -> onboard LEDs[0..7]) ======
+IO_LOC  "gpio_out[0]" T18;
+IO_LOC  "gpio_out[1]" R18;
+IO_LOC  "gpio_out[2]" R17;
+IO_LOC  "gpio_out[3]" P16;
+
+
+IO_PORT "gpio_out[0]" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
+IO_PORT "gpio_out[1]" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
+IO_PORT "gpio_out[2]" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
+IO_PORT "gpio_out[3]" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
+
+
+//====== Keys (map gpio_in[0..1] -> onboard Key_in[0..1]) ======
+IO_LOC  "gpio_in[0]" AB13;
+IO_LOC  "gpio_in[1]" Y12;
+IO_PORT "gpio_in[0]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
+IO_PORT "gpio_in[1]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;
+
+//====== UART bring-up (optional) ======
+// Board pinout names: txp(U15) as output, rxp(V14) as input.
+// Platform UART0 IOF mapping uses GPIO16=RX and GPIO17=TX.
+IO_LOC  "gpio_out[17]" U15;
+IO_PORT "gpio_out[17]" IO_TYPE=LVCMOS33 PULL_MODE=UP DRIVE=8 BANK_VCCIO=3.3;
+
+IO_LOC  "gpio_in[16]" V14;
+IO_PORT "gpio_in[16]" IO_TYPE=LVCMOS33 PULL_MODE=UP BANK_VCCIO=3.3;

@@ -15,197 +15,45 @@
 module clk_unit (clkout_rtc, reset, clkin, clkout_system, lock);
 
 output clkout_rtc;
-input reset;
-input clkin;
+input reset;      // reset_n (active-low), 与 e203_soc_demo.v 的 erstn 保持一致
+input clkin;      // 板上 USR_CLK_IN: 27MHz
 output clkout_system;
 output lock;
-wire lock_sys;
-wire lock_rtc;
-wire rtc_rst;
-wire sys_rst;
 
-wire clkoutp_o;
-wire clkoutd_o;
-wire clkout_o;
-wire clkoutd3_o;
-wire gw_gnd;
+wire rst;
+wire pll_clk;
 
-reg [7:0] lock_rtc_dly =8'h00;
+assign rst = ~reset;
 
-always@(posedge clkout_rtc)
-	lock_rtc_dly <= {lock_rtc_dly[6:0],lock_rtc};
-
-assign	rtc_rst = !reset;
-assign	sys_rst = !lock_rtc_dly[7];
-assign gw_gnd = 1'b0;
-assign lock = lock_rtc & lock_sys;
-
-PLL pll_inst_rtc (
-    .CLKOUT(clkout_o),
-    .LOCK(lock_rtc),
-    .CLKOUTP(clkoutp_o),
-    .CLKOUTD(clkout_rtc),
-    .CLKOUTD3(clkoutd3_o),
-    .RESET(rtc_rst),
-    .RESET_P(gw_gnd),
-    .RESET_I(gw_gnd),
-    .RESET_S(gw_gnd),
-    .CLKIN(clkin),
-    .CLKFB(gw_gnd),
-    .FBDSEL({gw_gnd,gw_gnd,gw_gnd,gw_gnd,gw_gnd,gw_gnd}),
-    .IDSEL({gw_gnd,gw_gnd,gw_gnd,gw_gnd,gw_gnd,gw_gnd}),
-    .ODSEL({gw_gnd,gw_gnd,gw_gnd,gw_gnd,gw_gnd,gw_gnd}),
-    .PSDA({gw_gnd,gw_gnd,gw_gnd,gw_gnd}),
-    .DUTYDA({gw_gnd,gw_gnd,gw_gnd,gw_gnd}),
-    .FDLY({gw_gnd,gw_gnd,gw_gnd,gw_gnd})
-);
-//input clock =27MHz, rtc runs at 35.1562kHz
-defparam pll_inst_rtc.FCLKIN = "27";
-defparam pll_inst_rtc.DYN_IDIV_SEL = "false";
-defparam pll_inst_rtc.IDIV_SEL = 5;         //div clk_in = 6, means fref_clk = 4.5MHz
-defparam pll_inst_rtc.DYN_FBDIV_SEL = "false";
-defparam pll_inst_rtc.FBDIV_SEL = 0;        //fb_div = 1
-defparam pll_inst_rtc.DYN_ODIV_SEL = "false";
-defparam pll_inst_rtc.ODIV_SEL = 128;       //fvco=128xfin= 576MHz,valid
-defparam pll_inst_rtc.PSDA_SEL = "0000";
-defparam pll_inst_rtc.DYN_DA_EN = "false";
-defparam pll_inst_rtc.DUTYDA_SEL = "1000";
-defparam pll_inst_rtc.CLKOUT_FT_DIR = 1'b1;
-defparam pll_inst_rtc.CLKOUTP_FT_DIR = 1'b1;
-defparam pll_inst_rtc.CLKOUT_DLY_STEP = 0;
-defparam pll_inst_rtc.CLKOUTP_DLY_STEP = 0;
-defparam pll_inst_rtc.CLKFB_SEL = "internal";
-defparam pll_inst_rtc.CLKOUT_BYPASS = "false";
-defparam pll_inst_rtc.CLKOUTP_BYPASS = "false";
-defparam pll_inst_rtc.CLKOUTD_BYPASS = "false";
-defparam pll_inst_rtc.DYN_SDIV_SEL = 128;   //fclkod = 4.5MHz/128 = 35.1562kHz
-defparam pll_inst_rtc.CLKOUTD_SRC = "CLKOUT";
-defparam pll_inst_rtc.CLKOUTD3_SRC = "CLKOUT";
-defparam pll_inst_rtc.DEVICE = "GW2A-55";
-
-PLL pll_inst_system (
-    .CLKOUT(clkout_system),
-    .LOCK(lock_sys),
-    .CLKOUTP(clkoutp_o),
-    .CLKOUTD(clkoutd_o),
-    .CLKOUTD3(clkoutd3_o),
-    .RESET(sys_rst),
-    .RESET_P(gw_gnd),
-    .RESET_I(gw_gnd),
-    .RESET_S(gw_gnd),
-    .CLKIN(clkin),
-    .CLKFB(gw_gnd),
-    .FBDSEL({gw_gnd,gw_gnd,gw_gnd,gw_gnd,gw_gnd,gw_gnd}),
-    .IDSEL({gw_gnd,gw_gnd,gw_gnd,gw_gnd,gw_gnd,gw_gnd}),
-    .ODSEL({gw_gnd,gw_gnd,gw_gnd,gw_gnd,gw_gnd,gw_gnd}),
-    .PSDA({gw_gnd,gw_gnd,gw_gnd,gw_gnd}),
-    .DUTYDA({gw_gnd,gw_gnd,gw_gnd,gw_gnd}),
-    .FDLY({gw_gnd,gw_gnd,gw_gnd,gw_gnd})
+// 138K PLL：由 Gowin IP 生成 (GW5AST-138)，输入 27MHz
+Gowin_PLL u_pll (
+    .clkin(clkin),
+    .init_clk(clkin),
+    .clkout0(pll_clk)
 );
 
+assign clkout_system = pll_clk;
+assign lock = 1'b1;
 
-//5MHz
-/*
-defparam pll_inst_system.FCLKIN = "50";
-defparam pll_inst_system.DYN_IDIV_SEL = "false";
-defparam pll_inst_system.IDIV_SEL = 9;
-defparam pll_inst_system.DYN_FBDIV_SEL = "false";
-defparam pll_inst_system.FBDIV_SEL = 0;
-defparam pll_inst_system.DYN_ODIV_SEL = "false";
-defparam pll_inst_system.ODIV_SEL = 128;
-defparam pll_inst_system.PSDA_SEL = "0000";
-defparam pll_inst_system.DYN_DA_EN = "true";
-defparam pll_inst_system.DUTYDA_SEL = "1000";
-defparam pll_inst_system.CLKOUT_FT_DIR = 1'b1;
-defparam pll_inst_system.CLKOUTP_FT_DIR = 1'b1;
-defparam pll_inst_system.CLKOUT_DLY_STEP = 0;
-defparam pll_inst_system.CLKOUTP_DLY_STEP = 0;
-defparam pll_inst_system.CLKFB_SEL = "internal";
-defparam pll_inst_system.CLKOUT_BYPASS = "false";
-defparam pll_inst_system.CLKOUTP_BYPASS = "false";
-defparam pll_inst_system.CLKOUTD_BYPASS = "false";
-defparam pll_inst_system.DYN_SDIV_SEL = 2;
-defparam pll_inst_system.CLKOUTD_SRC = "CLKOUT";
-defparam pll_inst_system.CLKOUTD3_SRC = "CLKOUT";
-defparam pll_inst_system.DEVICE = "GW2A-55";
-*/
+// 低频时钟：从 30MHz 分频得到约 32.77kHz，供 lfextclk 使用
+localparam integer RTC_DIV = 458; // fout ~= 30MHz/(2*458) ≈ 32.75kHz
+localparam integer RTC_CNT_W = $clog2(RTC_DIV);
 
-//10MHz
-/*
-defparam pll_inst_system.FCLKIN = "50";
-defparam pll_inst_system.DYN_IDIV_SEL = "false";
-defparam pll_inst_system.IDIV_SEL = 4;
-defparam pll_inst_system.DYN_FBDIV_SEL = "false";
-defparam pll_inst_system.FBDIV_SEL = 0;
-defparam pll_inst_system.DYN_ODIV_SEL = "false";
-defparam pll_inst_system.ODIV_SEL = 128;
-defparam pll_inst_system.PSDA_SEL = "0000";
-defparam pll_inst_system.DYN_DA_EN = "false";
-defparam pll_inst_system.DUTYDA_SEL = "1000";
-defparam pll_inst_system.CLKOUT_FT_DIR = 1'b1;
-defparam pll_inst_system.CLKOUTP_FT_DIR = 1'b1;
-defparam pll_inst_system.CLKOUT_DLY_STEP = 0;
-defparam pll_inst_system.CLKOUTP_DLY_STEP = 0;
-defparam pll_inst_system.CLKFB_SEL = "internal";
-defparam pll_inst_system.CLKOUT_BYPASS = "false";
-defparam pll_inst_system.CLKOUTP_BYPASS = "false";
-defparam pll_inst_system.CLKOUTD_BYPASS = "false";
-defparam pll_inst_system.DYN_SDIV_SEL = 2;
-defparam pll_inst_system.CLKOUTD_SRC = "CLKOUT";
-defparam pll_inst_system.CLKOUTD3_SRC = "CLKOUT";
-defparam pll_inst_system.DEVICE = "GW2A-55";
-*/
+reg [RTC_CNT_W-1:0] rtc_cnt = {RTC_CNT_W{1'b0}};
+reg rtc_clk = 1'b0;
 
-//18MHz
+always @(posedge clkin or negedge reset) begin
+    if (!reset) begin
+        rtc_cnt <= {RTC_CNT_W{1'b0}};
+        rtc_clk <= 1'b0;
+    end else if (rtc_cnt == RTC_DIV - 1) begin
+        rtc_cnt <= {RTC_CNT_W{1'b0}};
+        rtc_clk <= ~rtc_clk;
+    end else begin
+        rtc_cnt <= rtc_cnt + 1'b1;
+    end
+end
 
-defparam pll_inst_system.FCLKIN = "27";
-defparam pll_inst_system.DYN_IDIV_SEL = "false";
-defparam pll_inst_system.IDIV_SEL = 2;              //fref_clk = 27MHz/3= 9.0MHz
-defparam pll_inst_system.DYN_FBDIV_SEL = "false";
-defparam pll_inst_system.FBDIV_SEL = 1;             //fb_div = 2
-defparam pll_inst_system.DYN_ODIV_SEL = "false";
-defparam pll_inst_system.ODIV_SEL = 32;             //fvco = fb_div*fref_clk*32 = 576MHz, valid
-defparam pll_inst_system.PSDA_SEL = "0000";
-defparam pll_inst_system.DYN_DA_EN = "true";
-defparam pll_inst_system.DUTYDA_SEL = "1000";
-defparam pll_inst_system.CLKOUT_FT_DIR = 1'b1;
-defparam pll_inst_system.CLKOUTP_FT_DIR = 1'b1;
-defparam pll_inst_system.CLKOUT_DLY_STEP = 0;
-defparam pll_inst_system.CLKOUTP_DLY_STEP = 0;
-defparam pll_inst_system.CLKFB_SEL = "internal";
-defparam pll_inst_system.CLKOUT_BYPASS = "false";
-defparam pll_inst_system.CLKOUTP_BYPASS = "false";
-defparam pll_inst_system.CLKOUTD_BYPASS = "false";
-defparam pll_inst_system.DYN_SDIV_SEL = 2;
-defparam pll_inst_system.CLKOUTD_SRC = "CLKOUT";
-defparam pll_inst_system.CLKOUTD3_SRC = "CLKOUT";
-defparam pll_inst_system.DEVICE = "GW2A-55";
+assign clkout_rtc = rtc_clk;
 
-
-//40MHz
-/*
-defparam pll_inst_system.FCLKIN = "50";
-defparam pll_inst_system.DYN_IDIV_SEL = "false";
-defparam pll_inst_system.IDIV_SEL = 4;
-defparam pll_inst_system.DYN_FBDIV_SEL = "false";
-defparam pll_inst_system.FBDIV_SEL = 3;
-defparam pll_inst_system.DYN_ODIV_SEL = "false";
-defparam pll_inst_system.ODIV_SEL = 32;
-defparam pll_inst_system.PSDA_SEL = "0000";
-defparam pll_inst_system.DYN_DA_EN = "false";
-defparam pll_inst_system.DUTYDA_SEL = "1000";
-defparam pll_inst_system.CLKOUT_FT_DIR = 1'b1;
-defparam pll_inst_system.CLKOUTP_FT_DIR = 1'b1;
-defparam pll_inst_system.CLKOUT_DLY_STEP = 0;
-defparam pll_inst_system.CLKOUTP_DLY_STEP = 0;
-defparam pll_inst_system.CLKFB_SEL = "internal";
-defparam pll_inst_system.CLKOUT_BYPASS = "false";
-defparam pll_inst_system.CLKOUTP_BYPASS = "false";
-defparam pll_inst_system.CLKOUTD_BYPASS = "false";
-defparam pll_inst_system.DYN_SDIV_SEL = 2;
-defparam pll_inst_system.CLKOUTD_SRC = "CLKOUT";
-defparam pll_inst_system.CLKOUTD3_SRC = "CLKOUT";
-defparam pll_inst_system.DEVICE = "GW2A-55";
-*/
-
-endmodule //GW_PLL
+endmodule

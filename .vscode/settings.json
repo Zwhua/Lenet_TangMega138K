@@ -3,5 +3,6 @@
         "platform.h": "c",
         "const.h": "c",
         "board.h": "c"
-    }
+    },
+    "cmake.sourceDirectory": "/home/zwh/workspace/Lenet_FPGA/LENET/firmware/hello_world"
 }

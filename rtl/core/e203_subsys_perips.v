@@ -1442,6 +1442,7 @@ module e203_subsys_perips(
   wire                     pwm2_icb_rsp_valid;
   wire                     pwm2_icb_rsp_ready;
   wire [32-1:0]            pwm2_icb_rsp_rdata;
+  wire                     pwm2_icb_rsp_err;
 
   wire                     expl_axi_icb_cmd_valid;
   wire                     expl_axi_icb_cmd_ready;
@@ -3472,8 +3473,8 @@ sirv_gnrl_icb32towishb8 # (
     
     .i_icb_rsp_valid (pwm2_icb_rsp_valid),
     .i_icb_rsp_ready (pwm2_icb_rsp_ready),
-    .i_icb_rsp_rdata (pwm2_icb_rsp_rdata)
-     //.i_icb_rsp_err   (1'b0)悬空
+    .i_icb_rsp_rdata (pwm2_icb_rsp_rdata),
+    .i_icb_rsp_err   (pwm2_icb_rsp_err)
   );
 
 endmodule
