@@ -8,3 +8,7 @@ gowin_prj/impl/
 tools/makehex64/build/  
 sim/waveout_001.lxt
 waveout.vcd
+*.pr
+lenet_V003/impl/pnr/
+lenet_V003/impl/gwsynthesis/
+lenet_V003/impl/temp/
