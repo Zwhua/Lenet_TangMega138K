@@ -5,6 +5,8 @@ iverilog -g2005-sv -o waveout -I ../rtl/core ./sys_tb_top.sv ../sim_lib/gw2a/pri
 ../rtl/core/PLL_138K/pll_init.v   \
 ../rtl/ip/LENET/conv1_accel_icb.v     \
 ../rtl/ip/LENET/conv1_accel.v    \
+../rtl/ip/LENET/pool1_accel_icb.v     \
+../rtl/ip/LENET/pool1_accel.v    \
 ../rtl/core/e203_defines.v    \
 ../rtl/core/e203_biu.v    \
 ../rtl/core/e203_clk_ctrl.v    \

@@ -1,0 +1,102 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Sat Jan 11 15:30:00 2026
+[*]
+[dumpfile] "/home/zwh/workspace/Lenet_FPGA/LENET/sim/waveout.vcd"
+[savefile] "/home/zwh/workspace/Lenet_FPGA/LENET/sim/cpu_signals.gtkw"
+[timestart] 0
+[size] 1920 1080
+[pos] -1 -1
+*-18.000000 320000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+
+[treeopen] sys_tb_top.
+[treeopen] sys_tb_top.uut.
+[treeopen] sys_tb_top.uut.u_e203_subsys_top.
+[treeopen] sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.
+
+[sst_width] 300
+[signals_width] 350
+[sst_expanded] 1
+[sst_vpaned_height] 500
+
+@28
+sys_tb_top.clk
+sys_tb_top.rst_n
+@200
+-
+-=== GPIO 信号 ===
+@22
+sys_tb_top.gpio_in[31:0]
+sys_tb_top.gpio_out[31:0]
+@200
+-
+-=== CPU 核心状态 ===
+@28
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_cpu_top.u_e203_cpu.u_e203_core.u_e203_exu.u_e203_exu_commit.cmt_ena
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_cpu_top.u_e203_cpu.u_e203_core.u_e203_exu.u_e203_exu_commit.cmt_mret
+@22
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_cpu_top.u_e203_cpu.u_e203_core.u_e203_exu.u_e203_exu_commit.cmt_pc[31:0]
+@200
+-
+-=== 取指单元 (IFU) ===
+@28
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_cpu_top.u_e203_cpu.u_e203_core.u_e203_ifu.ifu_o_valid
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_cpu_top.u_e203_cpu.u_e203_core.u_e203_ifu.ifu_o_ready
+@22
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_cpu_top.u_e203_cpu.u_e203_core.u_e203_ifu.ifu_o_ir[31:0]
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_cpu_top.u_e203_cpu.u_e203_core.u_e203_ifu.ifu_o_pc[31:0]
+@200
+-
+-=== LSU 访存单元 ===
+@28
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_cpu_top.u_e203_cpu.u_e203_core.u_e203_lsu.lsu_o_valid
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_cpu_top.u_e203_cpu.u_e203_core.u_e203_lsu.lsu_o_ready
+@22
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_cpu_top.u_e203_cpu.u_e203_core.u_e203_lsu.lsu_o_wbck_wdat[31:0]
+@200
+-
+-=== BIU 总线接口 (到片上存储/外设) ===
+@28
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_cpu_top.u_e203_cpu.u_e203_biu.biu_icb_cmd_valid
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_cpu_top.u_e203_cpu.u_e203_biu.biu_icb_cmd_ready
+@22
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_cpu_top.u_e203_cpu.u_e203_biu.biu_icb_cmd_addr[31:0]
+@28
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_cpu_top.u_e203_cpu.u_e203_biu.biu_icb_cmd_read
+@22
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_cpu_top.u_e203_cpu.u_e203_biu.biu_icb_cmd_wdata[31:0]
+@28
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_cpu_top.u_e203_cpu.u_e203_biu.biu_icb_rsp_valid
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_cpu_top.u_e203_cpu.u_e203_biu.biu_icb_rsp_ready
+@22
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_cpu_top.u_e203_cpu.u_e203_biu.biu_icb_rsp_rdata[31:0]
+@200
+-
+-=== PWM2/卷积加速器 ICB 总线 ===
+@28
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_subsys_perips.pwm2_icb_cmd_valid
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_subsys_perips.pwm2_icb_cmd_ready
+@22
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_subsys_perips.pwm2_icb_cmd_addr[31:0]
+@28
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_subsys_perips.pwm2_icb_cmd_read
+@22
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_subsys_perips.pwm2_icb_cmd_wdata[31:0]
+@28
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_subsys_perips.pwm2_icb_rsp_valid
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_subsys_perips.pwm2_icb_rsp_ready
+@22
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_subsys_perips.pwm2_icb_rsp_rdata[31:0]
+@200
+-
+-=== 卷积加速器内部状态 ===
+@28
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_subsys_perips.u_lenet_accel.start_reg
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_subsys_perips.u_lenet_accel.done_reg
+@22
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_subsys_perips.u_lenet_accel.u_accel.state[2:0]
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_subsys_perips.u_lenet_accel.u_accel.oc[2:0]
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_subsys_perips.u_lenet_accel.u_accel.out_y[4:0]
+sys_tb_top.uut.u_e203_subsys_top.u_e203_subsys_main.u_e203_subsys_perips.u_lenet_accel.u_accel.out_x[4:0]
+[pattern_trace] 1
+[pattern_trace] 0

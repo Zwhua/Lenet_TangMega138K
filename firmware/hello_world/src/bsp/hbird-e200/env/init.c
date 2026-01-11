@@ -53,7 +53,7 @@ uint64_t get_timer_value()
 
 unsigned long get_timer_freq()
 {
-  return 32552;
+  return 65104;
 }
 
 uint64_t get_instret_value()

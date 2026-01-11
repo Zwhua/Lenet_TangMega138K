@@ -1,16 +1,17 @@
 `timescale 1ns / 1ps
-module conv1_accel_icb #(
-    parameter IN_CH    = 1,
-    parameter OUT_CH   = 6,
-    parameter IN_SIZE  = 28,
-    parameter K        = 5,
-    parameter OUT_SIZE = IN_SIZE - K + 1,
-
-    parameter ICB_RW_ADDR_W = 32,
-    parameter ICB_RW_DATA_W = 32
+//==============================================================================
+// 全连接层 ICB 接口包装模块
+// 将FC加速器连接到SoC的ICB总线
+//==============================================================================
+module fc_accel_icb #(
+    parameter IN_SIZE  = 400,    // 输入向量长度
+    parameter OUT_SIZE = 120,    // 输出向量长度
+    
+    // 基地址 (可配置不同FC层使用不同地址)
+    parameter BASE_ADDR = 32'h1003_9000
 )(
-    input  wire                      clk,
-    input  wire                      rst_n,
+    input  wire        clk,
+    input  wire        rst_n,
 
     // ===========================
     // ICB Slave Interface
@@ -21,7 +22,6 @@ module conv1_accel_icb #(
     input  wire        i_icb_cmd_read,
     input  wire [31:0] i_icb_cmd_wdata,
     
-    // ICB 响应通道
     output reg         i_icb_rsp_valid, 
     input  wire        i_icb_rsp_ready,
     output reg  [31:0] i_icb_rsp_rdata,  
@@ -29,20 +29,25 @@ module conv1_accel_icb #(
 );
 
     // ===========================
-    // 地址映射
+    // 地址映射 (相对于BASE_ADDR的偏移)
     // ===========================
-    localparam ADDR_CTRL      = 32'h1003_5000;
-    localparam ADDR_STATUS    = 32'h1003_5004;
+    // CTRL:   BASE + 0x0000
+    // STATUS: BASE + 0x0004
+    // INPUT:  BASE + 0x0010  (IN_SIZE * 4 bytes)
+    // WEIGHT: BASE + 0x1000  (IN_SIZE * OUT_SIZE * 4 bytes)
+    // BIAS:   BASE + 0x30000 (OUT_SIZE * 4 bytes, 给足够空间存放权重)
+    // OUTPUT: BASE + 0x31000 (OUT_SIZE * 4 bytes)
+    
+    localparam ADDR_CTRL   = BASE_ADDR + 32'h0000;
+    localparam ADDR_STATUS = BASE_ADDR + 32'h0004;
+    localparam ADDR_INPUT  = BASE_ADDR + 32'h0010;
+    localparam ADDR_WEIGHT = BASE_ADDR + 32'h1000;
+    // 权重大小: IN_SIZE * OUT_SIZE * 4, 例如 400*120*4 = 192000 = 0x2EE00
+    // 所以bias需要放在权重之后足够远的位置
+    localparam ADDR_BIAS   = BASE_ADDR + 32'h30000;
+    localparam ADDR_OUTPUT = BASE_ADDR + 32'h31000;
 
-    localparam ADDR_INPUT     = 32'h1003_5010;
-    localparam ADDR_WEIGHT    = 32'h1003_6000;
-    localparam ADDR_BIAS      = 32'h1003_7000;
-    localparam ADDR_OUTPUT    = 32'h1003_8000;
-
-    localparam INPUT_SIZE  = IN_CH*IN_SIZE*IN_SIZE;
-    localparam WEIGHT_SIZE = OUT_CH*IN_CH*K*K;
-    localparam BIAS_SIZE   = OUT_CH;
-    localparam OUTPUT_SIZE = OUT_CH*OUT_SIZE*OUT_SIZE;
+    localparam WEIGHT_SIZE = IN_SIZE * OUT_SIZE;
 
     // CTRL/STATUS
     reg start_reg;
@@ -57,17 +62,17 @@ module conv1_accel_icb #(
     wire read_en  = i_icb_cmd_valid &&  i_icb_cmd_read;
 
     // ===========================
-    // 生成写通道（写入 conv1_accel 内部 buffer）
+    // 地址解码
     // ===========================
-    localparam integer IN_AW  = $clog2(INPUT_SIZE);
+    localparam integer IN_AW  = $clog2(IN_SIZE);
     localparam integer W_AW   = $clog2(WEIGHT_SIZE);
-    localparam integer B_AW   = $clog2(BIAS_SIZE);
-    localparam integer OUT_AW = $clog2(OUTPUT_SIZE);
+    localparam integer B_AW   = $clog2(OUT_SIZE);
+    localparam integer OUT_AW = $clog2(OUT_SIZE);
 
-    wire addr_is_input  = (i_icb_cmd_addr >= ADDR_INPUT)  && (i_icb_cmd_addr < (ADDR_INPUT  + INPUT_SIZE*4));
+    wire addr_is_input  = (i_icb_cmd_addr >= ADDR_INPUT)  && (i_icb_cmd_addr < (ADDR_INPUT  + IN_SIZE*4));
     wire addr_is_weight = (i_icb_cmd_addr >= ADDR_WEIGHT) && (i_icb_cmd_addr < (ADDR_WEIGHT + WEIGHT_SIZE*4));
-    wire addr_is_bias   = (i_icb_cmd_addr >= ADDR_BIAS)   && (i_icb_cmd_addr < (ADDR_BIAS   + BIAS_SIZE*4));
-    wire addr_is_output = (i_icb_cmd_addr >= ADDR_OUTPUT) && (i_icb_cmd_addr < (ADDR_OUTPUT + OUTPUT_SIZE*4));
+    wire addr_is_bias   = (i_icb_cmd_addr >= ADDR_BIAS)   && (i_icb_cmd_addr < (ADDR_BIAS   + OUT_SIZE*4));
+    wire addr_is_output = (i_icb_cmd_addr >= ADDR_OUTPUT) && (i_icb_cmd_addr < (ADDR_OUTPUT + OUT_SIZE*4));
 
     wire input_we  = write_en && addr_is_input;
     wire weight_we = write_en && addr_is_weight;
@@ -81,26 +86,16 @@ module conv1_accel_icb #(
     wire signed [7:0]  weight_wdata = i_icb_cmd_wdata[7:0];
     wire signed [31:0] bias_wdata   = i_icb_cmd_wdata;
 
-    // 读地址（用于读回验证）
-    wire [IN_AW-1:0]  input_raddr  = (i_icb_cmd_addr - ADDR_INPUT)  >> 2;
-    wire [W_AW-1:0]   weight_raddr = (i_icb_cmd_addr - ADDR_WEIGHT) >> 2;
-    wire [B_AW-1:0]   bias_raddr   = (i_icb_cmd_addr - ADDR_BIAS)   >> 2;
     wire [OUT_AW-1:0] output_raddr = (i_icb_cmd_addr - ADDR_OUTPUT) >> 2;
-    
-    // 读数据（从 conv1_accel 内部 buffer）
-    wire signed [7:0]  input_rdata;
-    wire signed [7:0]  weight_rdata;
-    wire signed [31:0] bias_rdata;
     wire signed [31:0] output_rdata;
 
     // ===========================
-    // 写寄存器/写 buffer
+    // 写 CTRL 寄存器
     // ===========================
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             start_reg <= 0;
         end else if (write_en) begin
-            // 写 CTRL
             if (i_icb_cmd_addr == ADDR_CTRL) begin
                 start_reg <= i_icb_cmd_wdata[0];
             end
@@ -108,7 +103,7 @@ module conv1_accel_icb #(
     end
 
     // ===========================
-    // ICB 读寄存器/读 buffer（支持真实数据读回）
+    // ICB 读响应
     // ===========================
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -120,32 +115,14 @@ module conv1_accel_icb #(
             i_icb_rsp_err   <= 1'b0;
 
             if (read_en) begin
-                // CTRL 寄存器
-                if (i_icb_cmd_addr == ADDR_CTRL) begin
-                    i_icb_rsp_rdata <= {31'b0, start_reg};
-                end
-                // STATUS 寄存器
-                else if (i_icb_cmd_addr == ADDR_STATUS) begin
+                if (i_icb_cmd_addr == ADDR_STATUS) begin
                     i_icb_rsp_rdata <= {31'b0, done_reg};
                 end
-                // 输出 buffer 读取
                 else if (addr_is_output) begin
                     i_icb_rsp_rdata <= output_rdata;
                 end
-                // 读回 input buffer（异步读，返回实际数据）
-                else if (addr_is_input) begin
-                    i_icb_rsp_rdata <= {{24{input_rdata[7]}}, input_rdata};  // 符号扩展到32位
-                end
-                // 读回 weight buffer（异步读，返回实际数据）
-                else if (addr_is_weight) begin
-                    i_icb_rsp_rdata <= {{24{weight_rdata[7]}}, weight_rdata};  // 符号扩展到32位
-                end
-                // 读回 bias buffer
-                else if (addr_is_bias) begin
-                    i_icb_rsp_rdata <= bias_rdata;  // 直接返回32位bias
-                end
                 else begin
-                    i_icb_rsp_rdata <= 32'hDEAD_BEEF;  // 未知地址
+                    i_icb_rsp_rdata <= 32'h0;
                 end
             end else begin
                 i_icb_rsp_rdata <= 32'h0;
@@ -154,16 +131,14 @@ module conv1_accel_icb #(
     end
 
     // ===========================
-    // 卷积引擎实例化
+    // FC 引擎实例化
     // ===========================
     wire accel_done;
 
-    conv1_accel #(
-        .IN_CH(IN_CH),
-        .OUT_CH(OUT_CH),
+    fc_accel #(
         .IN_SIZE(IN_SIZE),
-        .K(K)
-    ) u_accel (
+        .OUT_SIZE(OUT_SIZE)
+    ) u_fc_accel (
         .clk(clk),
         .rst(!rst_n),
         .start(start_reg),
@@ -180,16 +155,6 @@ module conv1_accel_icb #(
         .bias_we(bias_we),
         .bias_waddr(bias_waddr),
         .bias_wdata(bias_wdata),
-
-        // 读取端口（调试用）
-        .input_raddr(input_raddr),
-        .input_rdata(input_rdata),
-        
-        .weight_raddr(weight_raddr),
-        .weight_rdata(weight_rdata),
-        
-        .bias_raddr(bias_raddr),
-        .bias_rdata(bias_rdata),
 
         .output_raddr(output_raddr),
         .output_rdata(output_rdata)

@@ -1557,7 +1557,7 @@ module e203_subsys_perips(
   .O10_BASE_REGION_LSB (12),
   //  * PWM2      : 0x1003 5000 -- 0x1003 5FFF
   .O11_BASE_ADDR       (32'h1003_5000),       
-  .O11_BASE_REGION_LSB (12),
+  .O11_BASE_REGION_LSB (16),  // 改为16，覆盖64KB (0x10030000~0x1003FFFF)
   //  * SysPer    : 0x1100 0000 -- 0x11FF FFFF
   .O12_BASE_ADDR       (32'h1100_0000),       
   .O12_BASE_REGION_LSB (24),

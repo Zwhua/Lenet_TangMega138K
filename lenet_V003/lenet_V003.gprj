@@ -62,12 +62,15 @@
         <File path="src/e203_subsys_pll.v" type="file.verilog" enable="1"/>
         <File path="src/e203_subsys_pllclkdiv.v" type="file.verilog" enable="1"/>
         <File path="src/e203_subsys_top.v" type="file.verilog" enable="1"/>
+        <File path="src/fc_accel.v" type="file.verilog" enable="1"/>
+        <File path="src/fc_accel_icb.v" type="file.verilog" enable="1"/>
         <File path="src/gowin_pll.v" type="file.verilog" enable="1"/>
         <File path="src/gowin_pll_mod.v" type="file.verilog" enable="1"/>
         <File path="src/i2c_master_bit_ctrl.v" type="file.verilog" enable="1"/>
         <File path="src/i2c_master_byte_ctrl.v" type="file.verilog" enable="1"/>
         <File path="src/i2c_master_defines.v" type="file.verilog" enable="1"/>
         <File path="src/i2c_master_top.v" type="file.verilog" enable="1"/>
+        <File path="src/lenet_accel_top.v" type="file.verilog" enable="1"/>
         <File path="src/pll_init.v" type="file.verilog" enable="1"/>
         <File path="src/sirv_1cyc_sram_ctrl.v" type="file.verilog" enable="1"/>
         <File path="src/sirv_AsyncResetReg.v" type="file.verilog" enable="1"/>
