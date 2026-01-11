@@ -1,5 +1,5 @@
 # Lenet_FPGA v1.1.26
-
+在这里先感谢蒋磊老师的指导！
 面向 Gowin TangMega138K FPGA 的 LeNet 卷积神经网络加速器 + E203 RISC-V SoC 工程，实现了硬件加速的神经网络推理系统。项目包含完整的 RTL 设计、固件、仿真环境与 FPGA 综合工程，便于在 Linux 环境下复现软硬件协同开发流程。
 
 ## 📋 项目概述
@@ -373,21 +373,7 @@ verilator --cc --exe --build -j 4 sys_tb_top.sv
 - [Icarus Verilog](http://iverilog.icarus.com/) - Verilog 仿真器
 - [Verilator](https://www.veripool.org/verilator/) - 高性能仿真器
 
-## 🤝 贡献指南
 
-欢迎提交 Issue 和 Pull Request！
-
-### 提交代码前请：
-1. 测试仿真通过
-2. 确保代码风格一致
-3. 更新相关文档
-4. 检查 `.gitignore` 排除大文件
-
-### 分支说明
-- `master` - 稳定版本
-- `zwh_V1128` - 开发分支
-- `e203_lenet_soc` - SoC 集成
-- `hbird-sdk` - SDK 适配
 
 ## 📄 许可证
 
@@ -405,5 +391,4 @@ verilator --cc --exe --build -j 4 sys_tb_top.sv
 ---
 
 **更新日期**: 2026-01-11  
-**版本**: v1.1.26  
-**状态**: ✅ 稳定可用
+**版本**: v1.1.27  
